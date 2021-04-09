@@ -64,6 +64,12 @@ def query_db(term, seq):
 
     results = { 'match_count': 0, 'matches': list() }
     for (seq_id, seq, elem_type, family, genus, species) in cursor:
+	
+        #if sequence is greater than 25bp, trim it down
+        if len(seq) > 25:
+
+            seq = seq[0:25]+"..."
+
         results['matches'].append({'id': seq_id, 'seq': seq,
 				   'type': elem_type, 'family': family,
 				   'organism': genus+" "+species})
