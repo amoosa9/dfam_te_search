@@ -47,25 +47,25 @@ def query_db(term, seq):
     #creates connection to mySQL database
     conn = mysql.connector.connect(user='amoosa1',
 	 			   password='IHaveTwelveSeals!',
-				   host='localhost', database='amoosa1_te')
+				   host='localhost', database='amoosa1')
     cursor = conn.cursor()
     
     #the mysql query
     qry = """
-	SELECT s.seq_id AS id, s.seq AS seq, e.type AS type, e.fam AS family,
-	       o.genus AS genus, o.species AS species
+	SELECT s.seq_id AS id, s.seq AS seq, e.type AS elem_type,
+               e.fam AS family, o.genus AS genus, o.species AS species
 	FROM sequences s
 		JOIN elements e ON s.elem_id = e.elem_id
 		JOIN organisms_final o ON s.org_id = o.org_id
-	WHERE (e.type LIKE term OR e.family LIKE term)
-		AND s.seq LIKE seq
+	WHERE (e.type LIKE %s OR e.fam LIKE %s)
+		AND s.seq LIKE %s
     """
-    cursor.execute(qry, (term, seq))
+    cursor.execute(qry, (term, term, seq))
 
     results = { 'match_count': 0, 'matches': list() }
-    for (id, seq, type, family, genus, species) in cursor:
+    for (seq_id, seq, elem_type, family, genus, species) in cursor:
         results['matches'].append({'id': seq_id, 'seq': seq,
-				   'type': type, 'family': family,
+				   'type': elem_type, 'family': family,
 				   'organism': genus+" "+species})
         results['match_count'] += 1
 
