@@ -7,7 +7,7 @@ function runSearch( term ) {
 
     //turns form inputs into a string
     var frmStr = $('#search_te').serialize();
-    
+
     $.ajax({
         url: './search_te.cgi',
         dataType: 'json',
@@ -68,7 +68,7 @@ $(document).ready( function() {
     $('#submit').click( function() {
 	
 	//only searches if at least one input is filled in
-	if($('#search_term').val() || $('#search_seq.val()) {
+	if($('#search_term').val() || $('#search_seq').val()) {
         	runSearch();
 	}
 
