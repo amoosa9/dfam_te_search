@@ -1,0 +1,82 @@
+#!/usr/local/bin/python3
+
+import cgi, json
+import os
+import mysql.connector
+
+"""A CGI script that searches a transposable element database using user defined search terms from an HTML form and outputs the results in JSON format"""
+
+def main():
+
+    print("Content-Type: application/json\n\n")
+
+    #gets form data
+    form = cgi.FieldStorage()
+    term = form.getvalue('search_term')
+    seq = form.getvalue('search_seq')
+
+    #checks for blank terms and formats them for SQL query
+    term, seq = process_terms(term, seq)
+
+    #queries database for matching TEs
+    results = query_db(term, seq)
+
+    #prints the matches in JSON format
+    print(json.dumps(results))
+
+#formats search terms for SQL query
+def process_terms(term, seq):
+
+	#checks for blank inputs
+	if term is None:
+		term = "" 
+ 
+	if seq is None:
+		seq = ""
+
+	#formats inputs for SQL query
+
+	term = "%" + term + "%"
+	seq = "%" + seq + "%"
+
+	return term, seq
+
+#queries TE database for elements that match search term or sequence
+def query_db(term, seq):
+        
+    #creates connection to mySQL database
+    conn = mysql.connector.connect(user='amoosa1',
+	 			   password='IHaveTwelveSeals!',
+				   host='localhost', database='amoosa1_te')
+    cursor = conn.cursor()
+    
+    #the mysql query
+    qry = """
+	SELECT s.seq_id AS id, s.seq AS seq, e.type AS type, e.fam AS family,
+	       o.genus AS genus, o.species AS species
+	FROM sequences s
+		JOIN elements e ON s.elem_id = e.elem_id
+		JOIN organisms_final o ON s.org_id = o.org_id
+	WHERE (e.type LIKE term OR e.family LIKE term)
+		AND s.seq LIKE seq
+    """
+    cursor.execute(qry, (term, seq))
+
+    results = { 'match_count': 0, 'matches': list() }
+    for (id, seq, type, family, genus, species) in cursor:
+        results['matches'].append({'id': seq_id, 'seq': seq,
+				   'type': type, 'family': family,
+				   'organism': genus+" "+species})
+        results['match_count'] += 1
+
+    #closes cursor
+    cursor.close()
+
+    #closes connection to the mySQL database
+    conn.close()
+
+    return results
+
+
+if __name__ == '__main__':
+    main()
