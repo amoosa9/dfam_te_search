@@ -3,6 +3,7 @@
 import re
 import sys
 import getopt
+import mysql.connector
 
 """A script that parses FASTA output files from Dfam RepeatModeler and
 uploads the information to a mySQL database"""
@@ -127,7 +128,7 @@ def upload_to_db(db_dicts, genus, species):
     #creates connection to mySQL database
     conn = mysql.connector.connect(user='amoosa1',
 	 			   password='IHaveTwelveSeals!',
-				   host='localhost', database='amoosa1_te')
+				   host='localhost', database='amoosa1')
 
     #gets organism ID
     org_id = get_org_id(conn, genus, species)	
@@ -136,20 +137,20 @@ def upload_to_db(db_dicts, genus, species):
     for entry in db_dicts:
 
 	#creates cursor
-	cursor = conn.cursor(
+        cursor = conn.cursor()
 
 	#gets element ID
-	elem_id = get_elem_id(conn, entry['elem_type'], entry['elem_fam'])
+        elem_id = get_elem_id(conn, entry['elem_type'], entry['elem_fam'])
 
 	#SQL query
-	qry = """INSERT INTO sequences(seq_id, sequence, elem_id, org_id)
+        qry = """INSERT INTO sequences(seq_id, seq, elem_id, org_id)
 		 VALUES(%s, %s, %s, %s)"""
 
 	#adds sequence to database
-	cursor.execute(qry, (entry['seq_id'], entry['seq'], elem_id, org_id))
+        cursor.execute(qry, (entry['seq_id'], entry['seq'], elem_id, org_id))
 
 	#closes cursor
-	cursor.close()
+        cursor.close()
 
     #commits changes
     conn.commit()
@@ -164,16 +165,16 @@ def get_org_id(conn, genus, species):
 	#attempts to insert organism into database
 	#if organism is already in database, it will not be added
 	cursor = conn.cursor()
-	qry = """INSERT IGNORE INTO organisms(genus, species)
+	qry = """INSERT IGNORE INTO organisms_final(genus, species)
 		 VALUES(%s, %s)"""
 	cursor.execute(qry, (genus, species))
 	conn.commit()
 	cursor.close()
 
 	#gets organism ID
-	cursor = conn.cursor()
+	cursor = conn.cursor(buffered=True)
 	qry = """SELECT o.org_id
-		 FROM organisms o
+		 FROM organisms_final o
 		 WHERE o.genus = %s AND o.species = %s"""
 	cursor.execute(qry, (genus,species))
 	org_id = cursor.fetchone()[0]
@@ -184,23 +185,23 @@ def get_org_id(conn, genus, species):
 	
 #gets element family ID
 #if element family is not in database, it is added
-def get_elem_id(conn, type, family):
+def get_elem_id(conn, elem_type, family):
 
 	#attempts to insert element family into database
 	#if element family is a duplicate, it will not be added
-	cursor = conn.cursor()
-	qry = """INSERT IGNORE INTO elements(type, family)
+	cursor = conn.cursor(buffered=True)
+	qry = """INSERT IGNORE INTO elements(type, fam)
 		 VALUES(%s, %s)"""
-	cursor.execute(qry, (type, family))
+	cursor.execute(qry, (elem_type, family))
 	conn.commit()
 	cursor.close()
 
 	#gets element family ID
-	cursor = conn.cursor()
-	qry = """SELECT e.org_id
+	cursor = conn.cursor(buffered=True)
+	qry = """SELECT e.elem_id
 		 FROM elements e
-		 WHERE e.type = %s AND e.family = %s"""
-	cursor.execute(qry, (type,family))
+		 WHERE e.type = %s AND e.fam = %s"""
+	cursor.execute(qry, (elem_type,family))
 	elem_id = cursor.fetchone()[0]
 	cursor.close()
 
