@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+	<meta charset="utf-8" />
+
+	<title>Dfam RepeatModeler Transposable Element Search</title>
+
+	<!--[if IE]>
+		<script src="http://html5shiv.googlecode.com/
+			     svn/trunk/html5.js"></script>
+	<![endif]-->
+
+    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/
+		jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/
+		jquery/3.6.0/jquery.min.js"></script>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/
+		libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="js/search_elem.js"></script>
+    <script type="text/javascript" src="js/autocomplete.js"></script>
+
+</head>
+
+<body id="main">
+
+    <h1>Dfam RepeatModeler Transposable Element Search</h1>
+
+    <a href="https://dfam.org/classification/tree" class="dfam_link">
+	Click to see the different Dfam Element Families
+    </a>
+
+    <form name="search_te" id="search_te" action="">
+
+        <input name="search_term" type="search" id="search_term" value=""
+		 autofocus="autofocus" placeholder="Enter a search term"/>
+	<input name="search_seq" type="search" id="search_seq" value=""
+		placeholder="Search by sequence">
+        <input name="submit" type="submit" id="submit" value="submit">
+
+    </form>
+
+    <section id='results'>
+
+        <p>
+            <span id='match_count'>0</span> match(es) found.
+        </p>
+
+        <table>
+	
+	    <colgroup>
+	    </colgroup>
+
+            <thead>
+
+		<tr>
+			<th>Sequence ID</th>
+			<th>Element Type</th>
+			<th>Element Family</th>
+			<th>Element Sequence (First 25 bases)</th>
+			<th>Organism</th>
+		</tr>
+
+            </thead>
+
+            <tbody>
+                <!-- table body populated by Javascript -->
+            </tbody>
+	</table>
+    </section>
+
+</body>
+
+</html>

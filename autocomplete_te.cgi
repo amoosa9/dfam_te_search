@@ -49,7 +49,7 @@ def query_db(term):
     curs = conn.cursor(buffered=True)
     
     #results of the queries
-    results = { 'match_count': 0, 'matches': list() }
+    results = []
 
     #queries the database for element types that match term
     qry = """
@@ -72,12 +72,9 @@ def query_db(term):
             #if result has not already been added
             if elem_type not in result_list: 
 
-                results['matches'].append({'label': elem_type, \
+                results.append({'label': elem_type, \
                                            'value': elem_type})
                 result_list.append(elem_type)
- 
-      	        #increment count of matches found
-                results['match_count'] += 1
 
 	#if the match was to a family of elements
         elif fam_found == 1:
@@ -85,14 +82,11 @@ def query_db(term):
             #if result has not already been seen
             if family not in result_list:
 
-                results['matches'].append({'label': family, 'value': family})
+                results.append({'label': family, 'value': family})
                 result_list.append(elem_type)
 
-       	        #increment count of matches found
-                results['match_count'] += 1
-
 	#terminate when five unique results are found
-        if results['match_count'] == 5:
+        if len(results) == 5:
 
             break
 
