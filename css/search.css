@@ -1,0 +1,13 @@
+/*
+ * Style sheet for transposable element search webpage
+ */
+
+/* add border to table cells */
+.result_table th, .result_table td {
+	border: 1px solid black;	
+}
+
+/* collapse table border */
+.result_table {
+	border-collapse: collapse;
+}
