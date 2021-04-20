@@ -32,3 +32,14 @@ col.seq {
 col.org {
 	background-color: #ffe6cc
 }
+
+/* hide dummy element used for file downloads */
+a.dummy_dl {
+	display: none;
+}
+
+td.seq {
+	max-width: 25ch;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}

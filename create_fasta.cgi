@@ -3,12 +3,11 @@
 import cgi, json
 import os
 import mysql.connector
+import textwrap
 
-"""A CGI script that searches a transposable element database using user defined search terms from an HTML form and outputs the results in JSON format"""
+"""A CGI script that searches a transposable element database using user defined search terms from an HTML form and outputs the results in a FASTA file"""
 
 def main():
-
-    print("Content-Type: application/json\n\n")
 
     #gets form data
     form = cgi.FieldStorage()
@@ -19,10 +18,13 @@ def main():
     term, seq = process_terms(term, seq)
 
     #queries database for matching TEs
-    results = query_db(term, seq)
+    fasta = query_db(term, seq)
 
-    #prints the matches in JSON format
-    print(json.dumps(results))
+    print("Content-Type:text/plain\n")
+
+    print(fasta)
+
+
 
 #formats search terms for SQL query
 def process_terms(term, seq):
@@ -52,7 +54,7 @@ def query_db(term, seq):
     
     #the mysql query
     qry = """
-	SELECT s.seq_id AS id, s.seq AS seq, e.type AS elem_type,
+	SELECT s.seq_id AS seq_id, s.seq AS seq, e.type AS elem_type,
                e.fam AS family, o.genus AS genus, o.species AS species
 	FROM sequences s
 		JOIN elements e ON s.elem_id = e.elem_id
@@ -62,13 +64,26 @@ def query_db(term, seq):
     """
     cursor.execute(qry, (term, term, seq))
 
-    results = { 'match_count': 0, 'matches': list() }
+    #creates FASTA file for results
+    fasta = ""
+
     for (seq_id, seq, elem_type, family, genus, species) in cursor:
-	
-        results['matches'].append({'id': seq_id, 'seq': seq,
-				   'type': elem_type, 'family': family,
-				   'organism': genus+" "+species})
-        results['match_count'] += 1
+
+	#writes sequence information as FASTA header string
+        header_string = ">"+seq_id+"|"+elem_type+"/"+family+"|"+ \
+                        genus+"_"+species+"\n"
+
+        fasta += header_string
+
+	#wraps sequence to 70 characters to comply with FASTA recommendation
+        seq_strings = textwrap.wrap(seq, width=70) 
+
+        for seq in seq_strings:
+
+            fasta += seq+"\n"
+
+	#newline to denote end of the sequence
+        fasta += "\n"
 
     #closes cursor
     cursor.close()
@@ -76,8 +91,7 @@ def query_db(term, seq):
     #closes connection to the mySQL database
     conn.close()
 
-    return results
-
+    return fasta
 
 if __name__ == '__main__':
     main()

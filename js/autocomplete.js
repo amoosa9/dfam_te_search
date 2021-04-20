@@ -25,9 +25,10 @@ window.onload=function() {
       //the minimum number of characters needed to trigger autocomplete
       minLength: 2,
 
-      //writes the clicked option into the search bar
+      //searches if autocomplete option is clicked
       select: function(event, ui) {
 		$("#search_term").val(ui.item.label);
+		runSearch();
       },
    });
 

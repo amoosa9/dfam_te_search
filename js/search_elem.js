@@ -40,19 +40,20 @@ function processJSON( data ) {
         $('<tr/>', { "id" : this_row_id } ).appendTo('tbody');
         
 	//add the ID column to the row
-        $('<td/>', { "text" : item.id } ).appendTo('#' + this_row_id);
+        $('<td/>', {"text" : item.id} ).appendTo('#' + this_row_id);
         
         //add the Type column to the row
-        $('<td/>', { "text" : item.type } ).appendTo('#' + this_row_id);
+        $('<td/>', {"text" : item.type} ).appendTo('#' + this_row_id);
 
         //add the Family column to the row
-        $('<td/>', { "text" : item.family } ).appendTo('#' + this_row_id);
+        $('<td/>', {"text" : item.family} ).appendTo('#' + this_row_id);
 
         //add the Sequence column to the row
-        $('<td/>', { "text" : item.seq } ).appendTo('#' + this_row_id);
+        $('<td/>', {"text": item.seq, "class": "seq"}).appendTo(
+							'#' + this_row_id);
 
 	//add the Organism column to the row
-	$('<td/>', { "text" : item.organism } ).appendTo('#' + this_row_id);
+	$('<td/>', {"text": item.organism} ).appendTo('#' + this_row_id);
     });
 
     //show results table

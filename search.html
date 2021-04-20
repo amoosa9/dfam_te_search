@@ -21,6 +21,7 @@
 		libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
     <script type="text/javascript" src="js/search_elem.js"></script>
     <script type="text/javascript" src="js/autocomplete.js"></script>
+    <script type="text/javascript" src="js/create_fasta.js"></script>
 
 </head>
 
@@ -35,10 +36,11 @@
     <form name="search_te" id="search_te" action="">
 
         <input name="search_term" type="search" id="search_term" value=""
-		 autofocus="autofocus" placeholder="Enter a search term"/>
+		 autofocus="autofocus" placeholder="Search by type/family"/>
 	<input name="search_seq" type="search" id="search_seq" value=""
 		placeholder="Search by sequence">
-        <input name="submit" type="submit" id="submit" value="submit">
+        <input name="submit" type="submit" id="submit" value="Search">
+	<input name="download" type="submit" id="download" value="Download">
 
     </form>
 
@@ -48,7 +50,7 @@
             <span id='match_count'>0</span> match(es) found.
         </p>
 
-        <table class="result_table">
+        <table id="result_table" class="result_table">
 	
 	    <colgroup>
 		<col class="id">
