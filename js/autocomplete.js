@@ -28,7 +28,6 @@ window.onload=function() {
       //searches if autocomplete option is clicked
       select: function(event, ui) {
 		$("#search_term").val(ui.item.label);
-		runSearch();
       },
    });
 
