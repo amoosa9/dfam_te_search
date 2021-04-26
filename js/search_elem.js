@@ -9,7 +9,7 @@ function runSearch( term ) {
     var frmStr = $('#search_te').serialize();
 
     $.ajax({
-        url: './search_te.cgi',
+        url: './cgi/search_te.cgi',
         dataType: 'json',
         data: frmStr,
         success: function(data, textStatus, jqXHR) {

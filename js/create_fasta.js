@@ -10,7 +10,7 @@ function getData() {
 	
 	//gets matching elements in FASTA format
 	$.ajax({
-		url: "./create_fasta.cgi",
+		url: "./cgi/create_fasta.cgi",
 		data: frmStr,
 		dataType: "text",
         	success: function(data, textStatus, jqXHR) {

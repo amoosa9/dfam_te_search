@@ -9,7 +9,7 @@ window.onload=function() {
 	//queries database
 	$.ajax({
 
-		url: "./autocomplete_te.cgi",
+		url: "./cgi/autocomplete_te.cgi",
 		type: 'get',
 		dataType: "json",
 		data: {
