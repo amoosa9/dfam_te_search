@@ -40,10 +40,16 @@ def process_term(term):
 #queries TE database for elements that match the searched type or family
 def query_db(term):
 
+    #gets MySQL username and password from config file
+    parser = configparser.ConfigParser()
+    parser.read("./config/config.txt")
+    username = parser.get("config", "username")
+    pswd = parser.get("config", "pswd")
+
     #creates connection to mySQL database
-    conn = mysql.connector.connect(user='amoosa1',
-	 			   password='IHaveTwelveSeals!',
-				   host='localhost', database='amoosa1')
+    conn = mysql.connector.connect(user=username,
+	 			   password=pswd,
+				   host='localhost', database='tedb')
 
     #cursors for checking types and families
     curs = conn.cursor(buffered=True)

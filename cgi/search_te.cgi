@@ -44,11 +44,16 @@ def process_terms(term, seq):
 #queries TE database for elements that match search term or sequence
 def query_db(term, seq):
         
+    #gets MySQL username and password from config file
+    parser = configparser.ConfigParser()
+    parser.read("./config/config.txt")
+    username = parser.get("config", "username")
+    pswd = parser.get("config", "pswd")
+
     #creates connection to mySQL database
-    conn = mysql.connector.connect(user='amoosa1',
-	 			   password='IHaveTwelveSeals!',
-				   host='localhost', database='amoosa1')
-    cursor = conn.cursor()
+    conn = mysql.connector.connect(user=username,
+	 			   password=pswd,
+				   host='localhost', database='tedb')
     
     #the mysql query
     qry = """
@@ -56,7 +61,7 @@ def query_db(term, seq):
                e.fam AS family, o.genus AS genus, o.species AS species
 	FROM sequences s
 		JOIN elements e ON s.elem_id = e.elem_id
-		JOIN organisms_final o ON s.org_id = o.org_id
+		JOIN organisms o ON s.org_id = o.org_id
 	WHERE (e.type LIKE %s OR e.fam LIKE %s)
 		AND s.seq LIKE %s
     """
