@@ -12,7 +12,7 @@ MySQL login credentials"""
 def set_config():
 
     #creates config file and adds header
-    config = open("./config/config.txt", mode="w")
+    config = open("config.txt", mode="w")
     config.write("[config]\n")
     
     #gets MySQL username and password

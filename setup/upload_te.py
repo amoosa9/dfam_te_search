@@ -128,7 +128,7 @@ def upload_to_db(db_dicts, genus, species):
 
     #gets MySQL username and password from config file
     parser = configparser.ConfigParser()
-    parser.read("./config/config.txt")
+    parser.read("config.txt")
     username = parser.get("config", "username")
     pswd = parser.get("config", "pswd")
 

@@ -46,7 +46,7 @@ def query_db(term, seq):
         
     #gets MySQL username and password from config file
     parser = configparser.ConfigParser()
-    parser.read("./config/config.txt")
+    parser.read("./setup/config.txt")
     username = parser.get("config", "username")
     pswd = parser.get("config", "pswd")
 
